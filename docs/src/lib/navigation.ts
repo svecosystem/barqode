@@ -13,8 +13,8 @@ const components = allDocs
 		href: `/docs/${doc.slug}`,
 	}));
 
-const configuration = allDocs
-	.filter((doc) => doc.section === "Configuration")
+const demos = allDocs
+	.filter((doc) => doc.section === "Demos")
 	.map((doc) => ({
 		title: doc.title,
 		href: `/docs/${doc.slug}`,
@@ -40,12 +40,16 @@ export const navigation = createNavigation({
 	],
 	sections: [
 		{
-			title: "Configuration",
-			items: configuration,
+			title: "Components",
+			items: components.sort((a, b) => {
+				if (a.title === "BarqodeStream") return -1;
+				if (b.title === "BarqodeStream") return 1;
+				return a.title.localeCompare(b.title);
+			}),
 		},
 		{
-			title: "Components",
-			items: components,
+			title: "Demos",
+			items: demos,
 		},
 	],
 });

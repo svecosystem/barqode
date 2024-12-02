@@ -9,7 +9,7 @@ export const siteConfig = defineSiteConfig({
 		width: "1200",
 	},
 	description: "QR and barcode detection for Svelte.",
-	author: "Ollema",
+	author: "ollema",
 	keywords: [
 		"svelte qr code reader",
 		"svelte barcodes",
