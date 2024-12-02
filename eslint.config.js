@@ -45,12 +45,11 @@ export default tseslint.config(
 			"dist/",
 			".svelte-kit/**/*",
 			"docs/.svelte-kit/**/*",
+			"docs/static/**/*",
+			"docs/build/**/*",
 			".svelte-kit",
-			"start/.svelte-kit/**/*",
-			"start/node_modules/**/*",
-			"start/build/**/*",
-			"packages/kit/dist/**/*",
-			"packages/kit/.svelte-kit/**/*",
+			"packages/barqode/dist/**/*",
+			"packages/barqode/.svelte-kit/**/*",
 		],
 	}
 );
