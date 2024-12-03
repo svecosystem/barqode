@@ -1,5 +1,5 @@
 ---
-title: BarqodeDropZone
+title: BarqodeDropzone
 description: File input with camera support on mobile.
 section: Components
 ---

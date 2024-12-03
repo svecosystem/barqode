@@ -12,10 +12,6 @@ Install the package using your preferred package manager:
 
 ```bash
 npm install barqode
-# or
-pnpm add barqode
-# or
-yarn add barqode
 ```
 
 ## Basic Usage
