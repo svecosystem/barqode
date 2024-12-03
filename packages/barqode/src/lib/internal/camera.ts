@@ -7,7 +7,7 @@ import {
 	StreamLoadTimeoutError,
 } from "./errors.js";
 import { eventOn, sleep } from "./callforth.js";
-import shimGetUserMedia from "./shimGetUserMedia.js";
+import shimGetUserMedia from "./shim-get-user-media.js";
 import { assertNever } from "./util.js";
 
 type StartTaskResult = {

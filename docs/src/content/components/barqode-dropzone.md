@@ -5,7 +5,7 @@ section: Components
 ---
 
 <script>
-  import Demo from '$lib/components/demos/barqode-drop-zone.svelte';
+  import Demo from '$lib/components/demos/barqode-dropzone.svelte';
 </script>
 
 You can drag-and-drop image files from your desktop or images embedded into other web pages anywhere in the area the component occupies. The images are directly scanned and positive results are indicated by the `onDetect` callback.

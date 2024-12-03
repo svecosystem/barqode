@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { BarqodeDropZone, type DetectedBarcode } from "barqode";
+	import { BarqodeDropzone, type DetectedBarcode } from "barqode";
 	import { DemoContainer } from "@svecodocs/kit";
 
 	let result = $state("");
@@ -17,9 +17,9 @@
 <DemoContainer>
 	<div class="title">Detecting QR-codes</div>
 
-	<BarqodeDropZone {onDetect} {onDragover}>
+	<BarqodeDropzone {onDetect} {onDragover}>
 		<div class="dropzone" class:dragover>Drop an image here to detect QR-codes</div>
-	</BarqodeDropZone>
+	</BarqodeDropzone>
 
 	<div class="result">
 		Last detected: {result}
