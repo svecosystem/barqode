@@ -1,5 +1,5 @@
 ---
-"barqode": minor
+"barqode": patch
 ---
 
 Initial release
