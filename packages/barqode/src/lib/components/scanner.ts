@@ -68,24 +68,21 @@ export async function setScanningFormats(formats: BarcodeFormat[]) {
 
 type ScanHandler = (_: DetectedBarcode[]) => void;
 
+type KeepScanningOptions = {
+	detectHandler: ScanHandler;
+	locateHandler: ScanHandler;
+	minDelay: number;
+	formats: BarcodeFormat[];
+};
+
 /**
  * Continuously extracts frames from camera stream and tries to read
  * potentially pictured QR codes.
  */
-export const keepScanning = async (
+export async function keepScanning(
 	videoElement: HTMLVideoElement,
-	{
-		detectHandler,
-		locateHandler,
-		minDelay,
-		formats,
-	}: {
-		detectHandler: ScanHandler;
-		locateHandler: ScanHandler;
-		minDelay: number;
-		formats: BarcodeFormat[];
-	}
-) => {
+	{ detectHandler, locateHandler, minDelay, formats }: KeepScanningOptions
+) {
 	console.debug("[barqode] start scanning");
 	await setScanningFormats(formats);
 
@@ -180,9 +177,9 @@ export const keepScanning = async (
 		contentBefore: [],
 		lastScanHadContent: false,
 	})(performance.now());
-};
+}
 
-const imageElementFromUrl = async (url: string) => {
+async function imageElementFromUrl(url: string) {
 	if (url.startsWith("http") && url.includes(location.host) === false) {
 		throw new DropImageFetchError();
 	}
@@ -193,12 +190,12 @@ const imageElementFromUrl = async (url: string) => {
 	await eventOn(image, "load");
 
 	return image;
-};
+}
 
-export const processFile = async (
+export async function processFile(
 	file: File,
 	formats: BarcodeFormat[] = ["qr_code"]
-): Promise<DetectedBarcode[]> => {
+): Promise<DetectedBarcode[]> {
 	// To scan files/urls we use one-off `BarcodeDetector` instances,
 	// since we don't scan as often as camera frames. Note, that we
 	// always use the polyfill. This is because (at the time of writing)
@@ -207,12 +204,12 @@ export const processFile = async (
 	const barcodeDetector = new BarcodeDetector({ formats });
 
 	return await barcodeDetector.detect(file);
-};
+}
 
-export const processUrl = async (
+export async function processUrl(
 	url: string,
 	formats: BarcodeFormat[] = ["qr_code"]
-): Promise<DetectedBarcode[]> => {
+): Promise<DetectedBarcode[]> {
 	// To scan files/urls we use one-off `BarcodeDetector` instances,
 	// since we don't scan as often as camera frames. Note, that we
 	// always use the polyfill. This is because (at the time of writing)
@@ -223,4 +220,4 @@ export const processUrl = async (
 	const image = await imageElementFromUrl(url);
 
 	return await barcodeDetector.detect(image);
-};
+}

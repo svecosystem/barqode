@@ -6,7 +6,7 @@ import {
 	InsecureContextError,
 	StreamLoadTimeoutError,
 } from "./errors.js";
-import { eventOn, timeout } from "./callforth.js";
+import { eventOn, sleep } from "./callforth.js";
 import shimGetUserMedia from "./shimGetUserMedia.js";
 import { assertNever } from "./util.js";
 
@@ -104,7 +104,7 @@ async function runStartTask(
 		// all video elements fail to load camera streams and never emit the `loadeddata` event.
 		// looks like this is related to a WebKit issue (see #298). no workarounds at the moment.
 		// to at least detect this situation, we throw an error if the event has not been emitted after a 6 second timeout.
-		timeout(6_000).then(() => {
+		sleep(6_000).then(() => {
 			throw new StreamLoadTimeoutError();
 		}),
 	]);
@@ -113,7 +113,7 @@ async function runStartTask(
 	// according to: https://oberhofer.co/mediastreamtrack-and-its-capabilities/#queryingcapabilities
 	// on some devices, getCapabilities only returns a non-empty object after some delay.
 	// there is no appropriate event so we have to add a constant timeout
-	await timeout(500);
+	await sleep(500);
 
 	const [track] = stream.getVideoTracks();
 

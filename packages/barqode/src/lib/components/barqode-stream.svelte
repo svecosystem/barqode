@@ -39,28 +39,7 @@
 			const settings = cameraSettings;
 			const ctx = pauseFrame.getContext("2d")!;
 
-			if (settings.shouldStream) {
-				cameraController.stop();
-				cameraActive = false;
-
-				try {
-					cameraController
-						.start(video, settings)
-						.then((capabilities) => {
-							if (isMounted) {
-								cameraActive = true;
-								onCameraOn?.(capabilities);
-							} else {
-								cameraController.stop();
-							}
-						})
-						.catch((error) => {
-							onError?.(error);
-						});
-				} catch (error) {
-					onError?.(error as Error);
-				}
-			} else {
+			if (!settings.shouldStream) {
 				pauseFrame.width = video.videoWidth;
 				pauseFrame.height = video.videoHeight;
 				ctx.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
@@ -68,6 +47,28 @@
 				cameraController.stop();
 				cameraActive = false;
 				onCameraOff?.();
+				return;
+			}
+
+			cameraController.stop();
+			cameraActive = false;
+
+			try {
+				cameraController
+					.start(video, settings)
+					.then((capabilities) => {
+						if (isMounted) {
+							cameraActive = true;
+							onCameraOn?.(capabilities);
+						} else {
+							cameraController.stop();
+						}
+					})
+					.catch((error) => {
+						onError?.(error);
+					});
+			} catch (error) {
+				onError?.(error as Error);
 			}
 		}
 	);

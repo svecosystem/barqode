@@ -10,20 +10,20 @@
 		children,
 	}: DropZoneProps = $props();
 
-	const onDetectFile = async (promise: Promise<DetectedBarcode[]>) => {
+	async function onDetectFile(promise: Promise<DetectedBarcode[]>) {
 		try {
 			const detectedCodes = await promise;
 			onDetect?.(detectedCodes);
 		} catch (error) {
 			onError?.(error as Error);
 		}
-	};
+	}
 
-	const onDragOverChange = (isDraggingOver: boolean) => {
+	async function onDragOverChange(isDraggingOver: boolean) {
 		onDragover?.(isDraggingOver);
-	};
+	}
 
-	const onDrop = async (event: DragEvent) => {
+	async function onDrop(event: DragEvent) {
 		if (!event.dataTransfer) return;
 
 		onDragOverChange(false);
@@ -38,7 +38,7 @@
 		if (droppedUrl !== "") {
 			onDetectFile(processUrl(droppedUrl, formats));
 		}
-	};
+	}
 
 	function handleDrop(e: DragEvent) {
 		e.preventDefault();
