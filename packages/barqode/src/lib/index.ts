@@ -7,6 +7,6 @@ export type {
 	BarcodeFormat,
 	Point2D,
 	CaptureProps,
-	DropZoneProps,
+	DropzoneProps as DropZoneProps,
 	StreamProps,
 } from "./components/types.js";

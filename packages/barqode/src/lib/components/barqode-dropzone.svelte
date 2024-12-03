@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { processFile, processUrl } from "./scanner.js";
-	import type { DropZoneProps, DetectedBarcode } from "./types.js";
+	import { processFile, processUrl } from "$lib/internal/scanner.js";
+	import type { DropzoneProps, DetectedBarcode } from "./types.js";
 
 	let {
 		formats = ["qr_code"],
@@ -8,7 +8,7 @@
 		onDragover,
 		onError,
 		children,
-	}: DropZoneProps = $props();
+	}: DropzoneProps = $props();
 
 	async function onDetectFile(promise: Promise<DetectedBarcode[]>) {
 		try {

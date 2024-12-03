@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { keepScanning, setScanningFormats } from "./scanner.js";
-	import * as cameraController from "./camera.js";
+	import { keepScanning, setScanningFormats } from "$lib/internal/scanner.js";
+	import * as cameraController from "$lib/internal/camera.js";
 	import type { StreamProps, DetectedBarcode, Point2D } from "./types.js";
 	import { watch } from "runed";
 	import { onMount } from "svelte";

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { processFile } from "./scanner.js";
+	import { processFile } from "$lib/internal/scanner.js";
 	import type { CaptureProps, BarcodeFormat } from "./types.js";
 
 	let {

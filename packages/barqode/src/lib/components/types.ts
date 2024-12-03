@@ -22,7 +22,7 @@ export type CaptureProps = {
 	onDetect?: (detectedCodes: DetectedBarcode[]) => void;
 } & HTMLInputAttributes;
 
-export type DropZoneProps = {
+export type DropzoneProps = {
 	/**
 	 * The formats of the barcodes to detect.
 	 *
