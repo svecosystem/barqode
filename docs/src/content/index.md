@@ -11,8 +11,8 @@ Barqode started out as a port of [`vue-qrcode-reader`](https://github.com/gruhn/
 ## Components
 
 - **`BarqodeStream`** - continuously scans frames from a camera stream.
-- **`BarqodeDropZone`** - drag & drop image files or web images.
 - **`BarqodeCapture`** - traditional file upload field input with camera support.
+- **`BarqodeDropZone`** - drag & drop image files or web images.
 
 ## Features
 
