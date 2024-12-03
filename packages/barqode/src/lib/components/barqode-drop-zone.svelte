@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { processFile, processUrl } from "./scanner.js";
-	import type { DropZoneProps, BarcodeFormat, DetectedBarcode } from "./types.js";
+	import type { DropZoneProps, DetectedBarcode } from "./types.js";
 
 	let {
-		formats = ["qr_code"] as BarcodeFormat[],
+		formats = ["qr_code"],
 		onDetect,
 		onDragover,
 		onError,

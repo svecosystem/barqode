@@ -1,13 +1,13 @@
 <script lang="ts">
 	import { keepScanning, setScanningFormats } from "./scanner.js";
 	import * as cameraController from "./camera.js";
-	import type { StreamProps, DetectedBarcode, BarcodeFormat, Point2D } from "./types.js";
+	import type { StreamProps, DetectedBarcode, Point2D } from "./types.js";
 	import { watch } from "runed";
-	import { onDestroy, onMount } from "svelte";
+	import { onMount } from "svelte";
 
 	let {
 		constraints = { facingMode: "environment" },
-		formats = ["qr_code"] as BarcodeFormat[],
+		formats = ["qr_code"],
 		paused = $bindable(false),
 		torch = false,
 		track,
@@ -26,7 +26,7 @@
 	let isMounted = $state(false);
 
 	// derived camera settings based on props and state
-	let cameraSettings = $derived({
+	const cameraSettings = $derived({
 		torch,
 		constraints: constraints,
 		shouldStream: isMounted && !paused,
@@ -80,7 +80,7 @@
 	});
 
 	// derived shouldScan based on camera settings and state
-	let shouldScan = $derived(cameraSettings.shouldStream && cameraActive);
+	const shouldScan = $derived(cameraSettings.shouldStream && cameraActive);
 
 	// watch shouldScan, start/stop scanning accordingly
 	watch(
@@ -179,13 +179,12 @@
 		}
 	}
 
-	// mount and unmount lifecycle
 	onMount(() => {
 		isMounted = true;
-	});
 
-	onDestroy(() => {
-		cameraController.stop();
+		return () => {
+			cameraController.stop();
+		};
 	});
 </script>
 
