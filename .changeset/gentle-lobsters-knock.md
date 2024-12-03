@@ -1,0 +1,5 @@
+---
+"barqode": minor
+---
+
+Initial release
