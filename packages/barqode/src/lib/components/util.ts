@@ -27,19 +27,6 @@ export const idempotent = <T, U>(action: (x: U[]) => T) => {
 };
 
 /**
- * Asserts that a given condition is true. If the condition is false, it throws an error with the provided failure message.
- *
- * @param condition - The condition to assert.
- * @param failureMessage - Optional message to include in the error if the assertion fails.
- * @throws {Error} If the condition is false.
- */
-export function assert(condition: boolean, failureMessage?: string): asserts condition {
-	if (condition === false) {
-		throw new Error(failureMessage ?? "assertion failure");
-	}
-}
-
-/**
  * Asserts that a given value is of type `never`, indicating that this code path should be unreachable.
  * Throws an error if called, signaling a logic error in the code.
  *

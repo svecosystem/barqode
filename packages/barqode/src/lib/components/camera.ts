@@ -13,7 +13,7 @@ import { assertNever } from "./util.js";
 type StartTaskResult = {
 	type: "start";
 	data: {
-		videoEl: HTMLVideoElement;
+		video: HTMLVideoElement;
 		stream: MediaStream;
 		capabilities: Partial<MediaTrackCapabilities>;
 		constraints: MediaTrackConstraints;
@@ -40,7 +40,7 @@ type CreateObjectURLCompat = (obj: MediaSource | Blob | MediaStream) => string;
 /**
  * Starts the camera with the given constraints and attaches the stream to the provided video element.
  *
- * @param videoEl - The HTML video element to which the camera stream will be attached.
+ * @param video - The HTML video element to which the camera stream will be attached.
  * @param constraints - The media track constraints to apply when starting the camera.
  * @param torch - A boolean indicating whether the torch (flashlight) should be enabled if supported.
  *
@@ -51,7 +51,7 @@ type CreateObjectURLCompat = (obj: MediaSource | Blob | MediaStream) => string;
  * @throws StreamLoadTimeoutError - If the video element fails to load the camera stream within a 6-second timeout.
  */
 async function runStartTask(
-	videoEl: HTMLVideoElement,
+	video: HTMLVideoElement,
 	constraints: MediaTrackConstraints,
 	torch: boolean
 ): Promise<StartTaskResult> {
@@ -81,24 +81,24 @@ async function runStartTask(
 		video: constraints,
 	});
 
-	if (videoEl.srcObject !== undefined) {
-		videoEl.srcObject = stream;
-	} else if (videoEl.mozSrcObject !== undefined) {
-		videoEl.mozSrcObject = stream;
+	if (video.srcObject !== undefined) {
+		video.srcObject = stream;
+	} else if (video.mozSrcObject !== undefined) {
+		video.mozSrcObject = stream;
 	} else if (window.URL.createObjectURL) {
-		videoEl.src = (window.URL.createObjectURL as CreateObjectURLCompat)(stream);
+		video.src = (window.URL.createObjectURL as CreateObjectURLCompat)(stream);
 	} else if (window.webkitURL) {
-		videoEl.src = (window.webkitURL.createObjectURL as CreateObjectURLCompat)(stream);
+		video.src = (window.webkitURL.createObjectURL as CreateObjectURLCompat)(stream);
 	} else {
-		videoEl.src = stream.id;
+		video.src = stream.id;
 	}
 
 	// in the WeChat browser on iOS, 'loadeddata' event won't get fired unless video is explicitly triggered by play()
-	videoEl.play();
+	video.play();
 
 	console.debug("[barqode] waiting for video element to load");
 	await Promise.race([
-		eventOn(videoEl, "loadeddata"),
+		eventOn(video, "loadeddata"),
 
 		// on iOS devices in PWA mode, BarqodeStream works initially, but after killing and restarting the PWA,
 		// all video elements fail to load camera streams and never emit the `loadeddata` event.
@@ -132,7 +132,7 @@ async function runStartTask(
 	return {
 		type: "start",
 		data: {
-			videoEl,
+			video,
 			stream,
 			capabilities,
 			constraints,
@@ -144,7 +144,7 @@ async function runStartTask(
 /**
  * Starts the camera with the given video element and settings.
  *
- * @param videoEl - The HTML video element to which the camera stream will be attached.
+ * @param video - The HTML video element to which the camera stream will be attached.
  * @param options.constraints - The media track constraints to apply when starting the camera.
  * @param options.torch - A boolean indicating whether the torch (flashlight) should be enabled if supported.
  * @param options.restart - A boolean indicating whether to restart the camera even if no settings changed. Defaults to false.
@@ -154,7 +154,7 @@ async function runStartTask(
  * @throws Error - If something goes wrong with the camera task queue.
  */
 export async function start(
-	videoEl: HTMLVideoElement,
+	video: HTMLVideoElement,
 	{
 		constraints,
 		torch,
@@ -173,7 +173,7 @@ export async function start(
 				// we'll check if we can reuse the previous result
 				const {
 					data: {
-						videoEl: prevVideoEl,
+						video: prevVideo,
 						stream: prevStream,
 						constraints: prevConstraints,
 						isTorchOn: prevIsTorchOn,
@@ -185,7 +185,7 @@ export async function start(
 				// which seem too much
 				if (
 					!restart &&
-					videoEl === prevVideoEl &&
+					video === prevVideo &&
 					constraints === prevConstraints &&
 					torch === prevIsTorchOn
 				) {
@@ -193,13 +193,13 @@ export async function start(
 					return prevTaskResult;
 				}
 				// something changed, restart (stop then start)
-				return runStopTask(prevVideoEl, prevStream, prevIsTorchOn).then(() =>
-					runStartTask(videoEl, constraints, torch)
+				return runStopTask(prevVideo, prevStream, prevIsTorchOn).then(() =>
+					runStartTask(video, constraints, torch)
 				);
 			} else if (prevTaskResult.type === "stop" || prevTaskResult.type === "failed") {
 				// previous task is a stop/error task
 				// we can safely start
-				return runStartTask(videoEl, constraints, torch);
+				return runStartTask(video, constraints, torch);
 			}
 
 			assertNever(prevTaskResult);
@@ -230,26 +230,26 @@ export async function start(
 /**
  * Stops the camera stream and cleans up associated resources.
  *
- * @param videoEl - The HTML video element displaying the camera stream.
+ * @param video - The HTML video element displaying the camera stream.
  * @param stream - The MediaStream object representing the active camera stream.
  * @param isTorchOn - A boolean indicating whether the torch is currently enabled.
  *
  * @returns A promise that resolves to a `StopTaskResult` when the camera is fully stopped.
  */
 async function runStopTask(
-	videoEl: HTMLVideoElement,
+	video: HTMLVideoElement,
 	stream: MediaStream,
 	isTorchOn: boolean
 ): Promise<StopTaskResult> {
 	console.debug("[barqode] stopping camera");
 
-	videoEl.src = "";
-	videoEl.srcObject = null;
-	videoEl.load();
+	video.src = "";
+	video.srcObject = null;
+	video.load();
 
 	// wait for load() to emit error
 	// because src and srcObject are empty
-	await eventOn(videoEl, "error");
+	await eventOn(video, "error");
 
 	for (const track of stream.getTracks()) {
 		// @ts-expect-error torch is not in the MediaTrackConstraints type but it should be?
@@ -280,9 +280,9 @@ export async function stop() {
 			return prevTaskResult;
 		}
 		const {
-			data: { videoEl, stream, isTorchOn },
+			data: { video, stream, isTorchOn },
 		} = prevTaskResult;
-		return runStopTask(videoEl, stream, isTorchOn);
+		return runStopTask(video, stream, isTorchOn);
 	});
 	// await the task queue asynchronously
 	const taskResult = await taskQueue;

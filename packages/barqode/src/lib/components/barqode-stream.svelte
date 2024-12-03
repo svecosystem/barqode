@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { keepScanning, setScanningFormats } from "./scanner.js";
 	import * as cameraController from "./camera.js";
-	import { assert } from "./util.js";
 	import type { StreamProps, DetectedBarcode, BarcodeFormat, Point2D } from "./types.js";
 	import { watch } from "runed";
 	import { onDestroy, onMount } from "svelte";
@@ -19,12 +18,10 @@
 		children,
 	}: StreamProps = $props();
 
-	// declare refs that we bind to
-	// TODO: is this best practice in Svelte 5?
-	// or should you use $state<HTMLVideoElement | undefined>(undefined)?
-	let videoRef: HTMLVideoElement;
-	let pauseFrameRef: HTMLCanvasElement;
-	let trackingLayerRef: HTMLCanvasElement;
+	// state
+	let video: HTMLVideoElement = $state()!;
+	let pauseFrame: HTMLCanvasElement = $state()!;
+	let trackingLayer: HTMLCanvasElement = $state()!;
 	let cameraActive = $state(false);
 	let isMounted = $state(false);
 
@@ -40,11 +37,7 @@
 		() => cameraSettings,
 		() => {
 			const settings = cameraSettings;
-
-			assert(videoRef !== undefined, "Video element must be defined");
-			assert(pauseFrameRef !== undefined, "Canvas must be defined");
-			const ctx = pauseFrameRef.getContext("2d");
-			assert(ctx !== null, "Canvas 2d context must be non-null");
+			const ctx = pauseFrame.getContext("2d")!;
 
 			if (settings.shouldStream) {
 				cameraController.stop();
@@ -52,7 +45,7 @@
 
 				try {
 					cameraController
-						.start(videoRef, settings)
+						.start(video, settings)
 						.then((capabilities) => {
 							if (isMounted) {
 								cameraActive = true;
@@ -68,9 +61,9 @@
 					onError?.(error as Error);
 				}
 			} else {
-				pauseFrameRef.width = videoRef.videoWidth;
-				pauseFrameRef.height = videoRef.videoHeight;
-				ctx.drawImage(videoRef, 0, 0, videoRef.videoWidth, videoRef.videoHeight);
+				pauseFrame.width = video.videoWidth;
+				pauseFrame.height = video.videoHeight;
+				ctx.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
 
 				cameraController.stop();
 				cameraActive = false;
@@ -94,16 +87,12 @@
 		() => shouldScan,
 		() => {
 			if (shouldScan) {
-				assert(pauseFrameRef !== undefined, "Pause frame canvas must be defined");
-				clearCanvas(pauseFrameRef);
-
-				assert(trackingLayerRef !== undefined, "Tracking canvas must be defined");
-				clearCanvas(trackingLayerRef);
+				clearCanvas(pauseFrame);
+				clearCanvas(trackingLayer);
 
 				const scanInterval = track === undefined ? 500 : 40;
 
-				assert(videoRef !== undefined, "Video element must be defined");
-				keepScanning(videoRef, {
+				keepScanning(video, {
 					detectHandler: (detectedCodes: DetectedBarcode[]) => onDetect?.(detectedCodes),
 					formats: formats,
 					locateHandler: onLocate,
@@ -119,8 +108,7 @@
 	 * @param canvas
 	 */
 	function clearCanvas(canvas: HTMLCanvasElement) {
-		const ctx = canvas.getContext("2d");
-		assert(ctx !== null, "Canvas 2d context should be non-null");
+		const ctx = canvas.getContext("2d")!;
 		ctx.clearRect(0, 0, canvas.width, canvas.height);
 	}
 
@@ -134,16 +122,13 @@
 	 * @param detectedCodes
 	 */
 	function onLocate(detectedCodes: DetectedBarcode[]) {
-		assert(trackingLayerRef !== undefined, "Tracking canvas must be defined");
-		assert(videoRef !== undefined, "Video element must be defined");
-
 		if (detectedCodes.length === 0 || track === undefined) {
-			clearCanvas(trackingLayerRef);
+			clearCanvas(trackingLayer);
 		} else {
-			const displayWidth = videoRef.offsetWidth;
-			const displayHeight = videoRef.offsetHeight;
-			const resolutionWidth = videoRef.videoWidth;
-			const resolutionHeight = videoRef.videoHeight;
+			const displayWidth = video.offsetWidth;
+			const displayHeight = video.offsetHeight;
+			const resolutionWidth = video.videoWidth;
+			const resolutionHeight = video.videoHeight;
 
 			const largerRatio = Math.max(
 				displayWidth / resolutionWidth,
@@ -187,9 +172,9 @@
 				};
 			});
 
-			trackingLayerRef.width = videoRef.offsetWidth;
-			trackingLayerRef.height = videoRef.offsetHeight;
-			const ctx = trackingLayerRef.getContext("2d") as CanvasRenderingContext2D;
+			trackingLayer.width = video.offsetWidth;
+			trackingLayer.height = video.offsetHeight;
+			const ctx = trackingLayer.getContext("2d") as CanvasRenderingContext2D;
 			track?.(adjustedCodes, ctx);
 		}
 	}
@@ -205,25 +190,18 @@
 </script>
 
 <div class="wrapper">
-	<video
-		bind:this={videoRef}
-		class="camera"
-		class:hidden={!shouldScan}
-		autoplay
-		muted
-		playsinline
-	>
+	<video bind:this={video} class="camera" class:hidden={!shouldScan} autoplay muted playsinline>
 	</video>
 
 	<canvas
 		id="qrcode-stream-pause-frame"
-		bind:this={pauseFrameRef}
+		bind:this={pauseFrame}
 		class="camera"
 		class:hidden={shouldScan}
 	>
 	</canvas>
 
-	<canvas id="qrcode-stream-tracking-layer" bind:this={trackingLayerRef} class="overlay"></canvas>
+	<canvas id="qrcode-stream-tracking-layer" bind:this={trackingLayer} class="overlay"></canvas>
 
 	<div class="overlay">
 		{@render children?.()}
