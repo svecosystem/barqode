@@ -14,6 +14,37 @@ You can drag-and-drop image files from your desktop or images embedded into othe
 
 <Demo />
 
+## Usage
+
+```svelte
+<script lang="ts">
+	import { BarqodeDropZone, type DetectedBarcode } from "barqode";
+
+	let result = $state("");
+	let dragover = $state(false);
+
+	function onDetect(detectedCodes: DetectedBarcode[]) {
+		result = detectedCodes.map((detectedCode) => detectedCode.rawValue).join(", ");
+	}
+
+	function onDragover(isDraggingOver: boolean) {
+		dragover = isDraggingOver;
+	}
+</script>
+
+<BarqodeDropZone {onDetect} {onDragover}>
+	<div class="dropzone" class:dragover>Drop an image here to detect QR-codes</div>
+</BarqodeDropZone>
+
+Last detected: {result}
+
+<style>
+	.dragover {
+		border-color: white;
+	}
+</style>
+```
+
 ## Props
 
 ### `formats`
@@ -57,53 +88,6 @@ Type: `(error: Error) => void`
 Callback function that is called when an error occurs.
 
 TODO: insert link to errors.
-
-## Usage
-
-```svelte
-<script lang="ts">
-	import { BarqodeDropZone, type DetectedBarcode } from "barqode";
-	import { DemoContainer } from "@svecodocs/kit";
-
-	let result = $state("");
-	let dragover = $state(false);
-
-	function onDetect(detectedCodes: DetectedBarcode[]) {
-		result = detectedCodes.map((detectedCode) => detectedCode.rawValue).join(", ");
-	}
-
-	function onDragover(isDraggingOver: boolean) {
-		dragover = isDraggingOver;
-	}
-</script>
-
-<BarqodeDropZone {onDetect} {onDragover}>
-	<div class="dropzone" class:dragover>Drop an image here to detect QR-codes</div>
-</BarqodeDropZone>
-
-<div class="result">
-	Last detected: {result}
-</div>
-
-<style>
-	.dropzone {
-		width: 100%;
-		height: 200px;
-		border: 2px solid #2563eb;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-	}
-
-	.dragover {
-		border-color: white;
-	}
-
-	.result {
-		margin-top: 1.25rem;
-	}
-</style>
-```
 
 ## Browser Support
 

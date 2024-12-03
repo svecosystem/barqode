@@ -15,6 +15,71 @@ The `BarqodeStream` component continuously scans frames from a camera stream and
 
 <Demo />
 
+## Usage
+
+```svelte
+<script lang="ts">
+	import { BarqodeStream, type DetectedBarcode } from "barqode";
+
+	let loading = $state(true);
+	let result: string | null = $state(null);
+
+	function onCameraOn() {
+		loading = false;
+	}
+
+	function onDetect(detectedCodes: DetectedBarcode[]) {
+		result = detectedCode.map((code) => detectedCode.rawValue).join(", ");
+	}
+
+	function track(detectedCodes: DetectedBarcode[], ctx: CanvasRenderingContext2D) {
+		for (const detectedCode of detectedCodes) {
+			const [firstPoint, ...otherPoints] = detectedCode.cornerPoints;
+
+			ctx.strokeStyle = "#2563eb";
+			ctx.lineWidth = 2;
+			ctx.beginPath();
+			ctx.moveTo(firstPoint.x, firstPoint.y);
+
+			for (const { x, y } of otherPoints) {
+				ctx.lineTo(x, y);
+			}
+
+			ctx.lineTo(firstPoint.x, firstPoint.y);
+			ctx.closePath();
+			ctx.stroke();
+		}
+	}
+</script>
+
+<div class="scanner">
+	<BarqodeStream {onCameraOn} {onDetect} {track}>
+		{#if loading}
+			<div class="loading-indicator">Loading...</div>
+		{/if}
+	</BarqodeStream>
+</div>
+
+Last detected: {result}
+
+<style>
+	.scanner {
+		width: 100%;
+		aspect-ratio: 4 / 3;
+	}
+
+	.loading-indicator {
+		width: 100%;
+		height: 100%;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		font-weight: bold;
+		font-size: 2rem;
+	}
+</style>
+```
+
 ## Props
 
 ### `constraints`
@@ -149,77 +214,6 @@ It receives an array of [detected barcodes](https://developer.mozilla.org/en-US/
 If you scan the same barcode multiple times in a row, `onDetect` is still only called once. When you hold a barcode in the camera, frames are actually decoded multiple times a second but you don't want to be flooded with callbacks that often. That's why the last decoded QR code is always cached and only new results are propagated. However, changing the value of `paused` resets this internal cache.
 
 </Callout>
-
-## Usage
-
-```svelte
-<script lang="ts">
-	import { BarqodeStream, type DetectedBarcode } from "barqode";
-
-	let loading = $state(true);
-	let result: string | null = $state(null);
-
-	function onCameraOn() {
-		loading = false;
-	}
-
-	function onDetect(detectedCodes: DetectedBarcode[]) {
-		result = detectedCode.map((code) => detectedCode.rawValue).join(", ");
-	}
-
-	function track(detectedCodes: DetectedBarcode[], ctx: CanvasRenderingContext2D) {
-		for (const detectedCode of detectedCodes) {
-			const [firstPoint, ...otherPoints] = detectedCode.cornerPoints;
-
-			ctx.strokeStyle = "#2563eb";
-			ctx.lineWidth = 2;
-			ctx.beginPath();
-			ctx.moveTo(firstPoint.x, firstPoint.y);
-
-			for (const { x, y } of otherPoints) {
-				ctx.lineTo(x, y);
-			}
-
-			ctx.lineTo(firstPoint.x, firstPoint.y);
-			ctx.closePath();
-			ctx.stroke();
-		}
-	}
-</script>
-
-<div class="scanner">
-	<BarqodeStream {onCameraOn} {onDetect} {track}>
-		{#if loading}
-			<div class="loading-indicator">Loading...</div>
-		{/if}
-	</BarqodeStream>
-</div>
-
-<div class="result">
-	Last detected: {result}
-</div>
-
-<style>
-	.scanner {
-		width: 100%;
-		aspect-ratio: 4 / 3;
-	}
-
-	.loading-indicator {
-		width: 100%;
-		height: 100%;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		font-weight: bold;
-		font-size: 2rem;
-	}
-
-	.result {
-		margin-top: 1.25rem;
-	}
-</style>
-```
 
 ## Browser Support
 

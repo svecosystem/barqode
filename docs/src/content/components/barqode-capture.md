@@ -14,6 +14,24 @@ The `BarqodeCapture` component is a simple file input with the `capture` attribu
 
 <Demo />
 
+## Usage
+
+```svelte
+<script lang="ts">
+	import { BarqodeCapture, type DetectedBarcode } from "barqode";
+
+	let result = $state("");
+
+	function onDetect(detectedCodes: DetectedBarcode[]) {
+		result = detectedCodes.map((detectedCode) => detectedCode.rawValue).join(", ");
+	}
+</script>
+
+<BarqodeCapture {onDetect} />
+
+Last detected: {result}
+```
+
 ## Props
 
 ### `formats`
@@ -55,32 +73,6 @@ By default, the following attributes are set:
 - `accept="image/*"`. This restricts the file types that can be uploaded to images.
 - `capture="environment"`. This tells the browser to open the camera when the input is clicked on mobile devices. You can choose between `user` and `environment`, which opens the front and back camera respectively. You can also disable this functionality by setting it to `null`.
 - `multiple`. This allows the user to upload multiple files at once. You can disable this by settings this to `false`.
-
-## Usage
-
-```svelte
-<script lang="ts">
-	import { BarqodeCapture, type DetectedBarcode } from "barqode";
-
-	let result = $state("");
-
-	function onDetect(detectedCodes: DetectedBarcode[]) {
-		result = detectedCodes.map((detectedCode) => detectedCode.rawValue).join(", ");
-	}
-</script>
-
-<BarqodeCapture {onDetect} />
-
-<div class="result">
-	Last detected: {result}
-</div>
-
-<style>
-	.result {
-		margin-top: 1.25rem;
-	}
-</style>
-```
 
 ## Browser Support
 
