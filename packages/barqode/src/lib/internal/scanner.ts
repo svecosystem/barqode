@@ -17,7 +17,7 @@ declare global {
  * instances can seamlessly be replaced in the middle of the scanning process, if the
  * `formats` prop of `BarqodeStream` is changed.
  *
- * This instance is not used by `BarqodeCapture` and `BarqodeDropZone`, because it may not
+ * This instance is not used by `BarqodeCapture` and `BarqodeDropzone`, because it may not
  * have the right `formats` configured. For these components we create one-off `BarcodeDetector`
  * instances because it does not happen so frequently anyway (see: `processFile`/`processUrl`).
  */

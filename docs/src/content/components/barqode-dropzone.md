@@ -1,6 +1,6 @@
 ---
 title: BarqodeDropzone
-description: File input with camera support on mobile.
+description: Click to upload images, drag & drop or use your camera to scan.
 section: Components
 ---
 
@@ -8,7 +8,7 @@ section: Components
   import Demo from '$lib/components/demos/barqode-dropzone.svelte';
 </script>
 
-You can drag-and-drop image files from your desktop or images embedded into other web pages anywhere in the area the component occupies. The images are directly scanned and positive results are indicated by the `onDetect` callback.
+This component functions as a file input with the `capture` attribute set to `environment` which allows users to take a picture with their camera. You can also drag-and-drop image files from your desktop or images embedded into other web pages anywhere in the area the component occupies. The images are directly scanned and positive results are indicated by the `onDetect` callback.
 
 ## Demo
 
@@ -18,7 +18,7 @@ You can drag-and-drop image files from your desktop or images embedded into othe
 
 ```svelte
 <script lang="ts">
-	import { BarqodeDropZone, type DetectedBarcode } from "barqode";
+	import { BarqodeDropzone, type DetectedBarcode } from "barqode";
 
 	let result = $state("");
 	let dragover = $state(false);
@@ -32,15 +32,33 @@ You can drag-and-drop image files from your desktop or images embedded into othe
 	}
 </script>
 
-<BarqodeDropZone {onDetect} {onDragover}>
-	<div class="dropzone" class:dragover>Drop an image here to detect QR-codes</div>
-</BarqodeDropZone>
+<div class="barqode" class:dragover>
+	<BarqodeDropzone {onDetect} {onDragover}>
+		<div class="instructions">
+			<p>Click to upload or drop an image here</p>
+		</div>
+	</BarqodeDropzone>
+</div>
 
 Last detected: {result}
 
 <style>
+	.barqode {
+		width: 100%;
+		aspect-ratio: 4 / 3;
+		border: 2px solid #2563eb;
+	}
+
 	.dragover {
 		border-color: white;
+	}
+
+	.instructions {
+		height: 100%;
+		width: 100%;
+		display: flex;
+		justify-content: center;
+		align-items: center;
 	}
 </style>
 ```
@@ -71,7 +89,7 @@ Type: `(detectedCodes: DetectedBarcode[]) => void`
 
 Callback function that is called when a barcode is detected.
 
-It receives an array of [detected barcodes](https://developer.mozilla.org/en-US/docs/Web/API/BarcodeDetector/detect#return_value), one callback per image dropped.
+It receives an array of [detected barcodes](https://developer.mozilla.org/en-US/docs/Web/API/BarcodeDetector/detect#return_value), one callback per image.
 
 If not barcode is detected, the array will be empty.
 
@@ -88,6 +106,18 @@ Type: `(error: Error) => void`
 Callback function that is called when an error occurs.
 
 TODO: insert link to errors.
+
+### Other props
+
+The `BarqodeDropzone` component accepts all attributes that a standard `input` element accepts.
+
+By default, the following attributes are set:
+
+- `type="file"`. This is required to make the input a file input. You should not change this.
+- `name="image"`. This is the name of the file input.
+- `accept="image/*"`. This restricts the file types that can be uploaded to images.
+- `capture="environment"`. This tells the browser to open the camera when the input is clicked on mobile devices. You can choose between `user` and `environment`, which opens the front and back camera respectively. You can also disable this functionality by setting it to `null`.
+- `multiple`. This allows the user to upload multiple files at once. You can disable this by settings this to `false`.
 
 ## Browser Support
 

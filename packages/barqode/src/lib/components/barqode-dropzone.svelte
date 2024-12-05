@@ -8,7 +8,10 @@
 		onDragover,
 		onError,
 		children,
+		...restProps
 	}: DropzoneProps = $props();
+
+	let input: HTMLInputElement = $state()!;
 
 	async function onDetectFile(promise: Promise<DetectedBarcode[]>) {
 		try {
@@ -62,15 +65,58 @@
 		e.preventDefault();
 		e.stopPropagation();
 	}
+
+	async function onChangeInput(event: Event) {
+		if (!(event.target instanceof HTMLInputElement) || !event.target.files) return;
+
+		for (const file of Array.from(event.target.files)) {
+			const detectedCodes = await processFile(file, formats);
+			onDetect?.(detectedCodes);
+		}
+	}
+
+	function onClick() {
+		input.click();
+	}
 </script>
 
 <div
-	role="region"
+	class="dropzone"
+	role="button"
+	tabindex="0"
 	aria-label="barcode detector drop zone"
 	ondrop={handleDrop}
 	ondragenter={handleDragEnter}
 	ondragleave={handleDragLeave}
 	ondragover={handleDragOver}
+	onclick={onClick}
+	onkeydown={onClick}
 >
+	<input
+		class="hidden"
+		onchange={onChangeInput}
+		type="file"
+		name="image"
+		accept="image/*"
+		capture="environment"
+		multiple
+		{...restProps}
+		bind:this={input}
+	/>
+
 	{@render children?.()}
 </div>
+
+<style>
+	.dropzone {
+		width: 100%;
+		height: 100%;
+		position: relative;
+		z-index: 0;
+		cursor: pointer;
+	}
+
+	.hidden {
+		display: none;
+	}
+</style>

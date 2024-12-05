@@ -27,12 +27,12 @@ The simplest way to use the library is with the `BarqodeStream` component for li
 	}
 </script>
 
-<div class="scanner">
+<div class="barqode">
 	<BarqodeStream {onDetect} />
 </div>
 
 <style>
-	.scanner {
+	.barqode {
 		width: 100%;
 		max-width: 600px;
 		aspect-ratio: 4/3;

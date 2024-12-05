@@ -4,24 +4,6 @@ import type { HTMLInputAttributes } from "svelte/elements";
 
 export type { DetectedBarcode, BarcodeFormat, Point2D };
 
-export type CaptureProps = {
-	/**
-	 * The formats of the barcodes to detect.
-	 *
-	 * @default ['qr_code']
-	 *
-	 * @see https://developer.mozilla.org/en-US/docs/Web/API/Barcode_Detection_API#supported_barcode_formats
-	 */
-	formats?: BarcodeFormat[];
-
-	/**
-	 * A callback function called a detection is made.
-	 *
-	 * @param codes - The detected barcodes.
-	 */
-	onDetect?: (detectedCodes: DetectedBarcode[]) => void;
-} & HTMLInputAttributes;
-
 export type DropzoneProps = {
 	/**
 	 * The formats of the barcodes to detect.
@@ -57,7 +39,7 @@ export type DropzoneProps = {
 	 * Optional prop for content to be overlayed on top of the drop zone.
 	 */
 	children?: Snippet;
-};
+} & HTMLInputAttributes;
 
 export type StreamProps = {
 	/**
