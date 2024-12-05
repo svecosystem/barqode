@@ -41,12 +41,12 @@
 		"@sveltejs/adapter-auto": "^3.3.1",
 		"@sveltejs/kit": "^2.9.0",
 		"@sveltejs/package": "^2.3.7",
-		"@sveltejs/vite-plugin-svelte": "^5.0.1",
+		"@sveltejs/vite-plugin-svelte": "^4.0.2",
 		"publint": "^0.2.12",
-		"svelte": "^5.7.0",
-		"svelte-check": "^4.1.1",
+		"svelte": "^5.4.0",
+		"svelte-check": "^4.1.0",
 		"typescript": "^5.7.2",
-		"vite": "^6.0.3"
+		"vite": "^5.4.11"
 	},
 	"license": "MIT",
 	"contributors": [
@@ -61,7 +61,7 @@
 	],
 	"dependencies": {
 		"barcode-detector": "^2.3.1",
-		"runed": "^0.16.2",
+		"runed": "^0.16.1",
 		"webrtc-adapter": "^9.0.1"
 	}
 }
