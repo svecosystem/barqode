@@ -256,11 +256,6 @@ You can select one or multiple but the more you select the more expensive scanni
 </div>
 
 <style>
-	.error {
-		font-weight: bold;
-		color: red;
-	}
-
 	.scanner {
 		width: 100%;
 		aspect-ratio: 4/3;
