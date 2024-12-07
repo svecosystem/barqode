@@ -1,26 +1,57 @@
 ---
 title: Introduction
-description: What exactly is Svecodocs?
+description: What is Barqode?
 section: Overview
 ---
 
-<script>
-	import { Callout } from '@svecodocs/kit'
-</script>
+Barqode provides a set of Svelte components for detecting and decoding QR codes and various other barcode formats right in the browser. It's a comprehensive solution that supports both camera streams and static image processing.
 
-After spending countless hours building documentation sites for various projects, we decided to build a docs package/starter template that we can use for future projects. This project is a result of that effort.
+Barqode started out as a port of [`vue-qrcode-reader`](https://github.com/gruhn/vue-qrcode-reader).
 
-Svecodocs is a starting point/utility library for building documentation sites under the [Svecosystem](https://github.com/svecosystem) umbrella. The code is open source, but it's built and maintained for our own specific needs, so we won't be accepting any public feature requests.
+## Components
 
-You are more than welcome to fork the project and customize it to your own needs.
+- **`BarqodeStream`** - continuously scans frames from a camera stream.
+- **`BarqodeDropzone`** - drag & drop, click to upload or capture images from camera.
 
 ## Features
 
-- **Markdown-based docs**. Write docs using Markdown and Svelte components
-- **Light and dark mode**. Toggle between light and dark mode
-- **Syntax highlighting**. Code blocks are automatically highlighted
-- **SEO-friendly**. Meta tags and Open Graph support out of the box
-- **Pre-built components**. Tabs, callouts, and more to use within the documentation
-- **Custom unified plugins**. Custom remark and rehype plugins to give more flexibility over the rendered HTML
-- **shadcn-svelte**. Beautifully designed Svelte components
-- **Tailwind v4**. Tailwind CSS v4 is used for styling
+- **Real-time scanning**. Detect codes from live camera stream.
+- **Multiple formats**. Support for QR codes and various barcode standards.
+- **Visual feedback**. Customizable canvas based tracking of detected codes.
+- **Cross-browser**. Works across modern browsers with a [WebAssembly-based polyfill](https://github.com/Sec-ant/barcode-detector) if needed.
+- **Camera selection**. Choose between front/rear cameras.
+- **Torch control**. Control device flashlight where supported.
+- **Responsive**. Components adapt to fill available space.
+- **Error handling**. Comprehensive error handling for camera/detection issues.
+
+## Usage Example
+
+```svelte
+<script lang="ts">
+	import { BarqodeStream, type DetectedBarcode } from "barqode";
+
+	function onDetect(detectedCodes: DetectedBarcode[]) {
+		console.log(detectedCodes.map((detectedCode) => detectedCode.rawValue));
+	}
+</script>
+
+<div class="barqode">
+	<BarqodeStream {onDetect} />
+</div>
+
+<style>
+	.barqode {
+		width: 100%;
+		max-width: 600px;
+		aspect-ratio: 4/3;
+	}
+</style>
+```
+
+## Browser Support
+
+The components rely primarily on the [Barcode Detection API](https://developer.mozilla.org/en-US/docs/Web/API/Barcode_Detection_API) and [Media Capture and Streams API](https://developer.mozilla.org/en-US/docs/Web/API/Media_Capture_and_Streams_API), with fallbacks where possible.
+
+While the core scanning functionality uses the native `BarcodeDetector` where available, it falls back to a [WebAssembly-based polyfill](https://github.com/Sec-ant/barcode-detector) to ensure consistent behavior across browsers.
+
+For a detailed compatibility overview, check each component's documentation.

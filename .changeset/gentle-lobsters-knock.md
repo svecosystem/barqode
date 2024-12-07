@@ -1,0 +1,5 @@
+---
+"barqode": patch
+---
+
+Initial release
