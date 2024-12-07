@@ -8,10 +8,6 @@ section: Demos
   import Demo from '$lib/components/demos/full-demo.svelte';
 </script>
 
-The `BarqodeStream` component continuously scans frames from a camera stream and detects barcodes in real-time.
-
-## Demo
-
 Modern mobile phones often have a variety of different cameras installed (e.g. front, rear,
 wide-angle, infrared, desk-view). The one picked by default is sometimes not the best
 choice. For more fine-grained control, you can select a camera by device constraints or by
@@ -21,6 +17,8 @@ Detected codes are visually highlighted in real-time. In this demo you can use t
 
 By default only QR-codes are detected but a variety of other barcode formats are also supported.
 You can select one or multiple but the more you select the more expensive scanning becomes.
+
+## Demo
 
 <Demo />
 
