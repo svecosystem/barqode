@@ -232,7 +232,7 @@
 		<div class="error">{error}</div>
 	{/if}
 
-	<div class="scanner my-4">
+	<div class="my-4" style="width: 100%; aspect-ratio: 4/3;">
 		<BarqodeStream
 			constraints={selectedConstraints}
 			track={trackFunctionSelected.value}
@@ -244,7 +244,7 @@
 	</div>
 
 	<div>
-		Last result: <b>{result}</b>
+		Last detected: {result}
 	</div>
 </DemoContainer>
 
@@ -252,10 +252,5 @@
 	.error {
 		font-weight: bold;
 		color: red;
-	}
-
-	.scanner {
-		width: 100%;
-		aspect-ratio: 4/3;
 	}
 </style>

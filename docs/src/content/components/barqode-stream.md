@@ -52,7 +52,7 @@ The `BarqodeStream` component continuously scans frames from a camera stream and
 	}
 </script>
 
-<div class="barqode">
+<div style="width: 100%; aspect-ratio: 4/3;">
 	<BarqodeStream {onCameraOn} {onDetect} {track}>
 		{#if loading}
 			<div class="loading-indicator">Loading...</div>
@@ -61,23 +61,6 @@ The `BarqodeStream` component continuously scans frames from a camera stream and
 </div>
 
 Last detected: {result}
-
-<style>
-	.barqode {
-		width: 100%;
-		aspect-ratio: 4 / 3;
-	}
-
-	.loading-indicator {
-		width: 100%;
-		height: 100%;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		font-weight: bold;
-		font-size: 2rem;
-	}
-</style>
 ```
 
 ## Props

@@ -36,7 +36,7 @@
 <DemoContainer>
 	<div class="title">Detecting QR-codes</div>
 
-	<div class="barqode">
+	<div style="width: 100%; aspect-ratio: 4/3;">
 		<BarqodeStream {onCameraOn} {onDetect} {track}>
 			{#if loading}
 				<div class="loading-indicator">Loading...</div>
@@ -52,11 +52,6 @@
 <style>
 	.title {
 		margin-bottom: 1.25rem;
-	}
-
-	.barqode {
-		width: 100%;
-		aspect-ratio: 4 / 3;
 	}
 
 	.loading-indicator {

@@ -226,21 +226,19 @@ You can select one or multiple but the more you select the more expensive scanni
 </select>
 
 <label>Barcode formats:</label>
-<div>
-	{#each Object.keys(barcodeFormats) as option}
-		{@const barcodeOption = option as BarcodeFormat}
-		<div>
-			<input type="checkbox" id={option} bind:checked={barcodeFormats[barcodeOption]} />
-			<label for={option}>{option}</label>
-		</div>
-	{/each}
-</div>
+{#each Object.keys(barcodeFormats) as option}
+	{@const barcodeOption = option as BarcodeFormat}
+	<div>
+		<input type="checkbox" id={option} bind:checked={barcodeFormats[barcodeOption]} />
+		<label for={option}>{option}</label>
+	</div>
+{/each}
 
 {#if error}
-	<div class="error">{error}</div>
+	{error}
 {/if}
 
-<div class="scanner">
+<div style="width: 100%; aspect-ratio: 4/3;">
 	<BarqodeStream
 		constraints={selectedConstraints}
 		track={trackFunctionSelected.value}
@@ -251,14 +249,5 @@ You can select one or multiple but the more you select the more expensive scanni
 	/>
 </div>
 
-<div>
-	Last result: <b>{result}</b>
-</div>
-
-<style>
-	.scanner {
-		width: 100%;
-		aspect-ratio: 4/3;
-	}
-</style>
+Last result: {result}
 ```

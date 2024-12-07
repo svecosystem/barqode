@@ -17,7 +17,7 @@
 <DemoContainer>
 	<div class="title">Detecting QR-codes</div>
 
-	<div class="barqode" class:dragover>
+	<div class:dragover style="width: 100%; aspect-ratio: 4/3; border: 2px solid #2563eb;">
 		<BarqodeDropzone {onDetect} {onDragover}>
 			<div class="instructions">
 				<p>Click to upload or drop an image here</p>
@@ -33,12 +33,6 @@
 <style>
 	.title {
 		margin-bottom: 1.25rem;
-	}
-
-	.barqode {
-		width: 100%;
-		aspect-ratio: 4 / 3;
-		border: 2px solid #2563eb;
 	}
 
 	.dragover {

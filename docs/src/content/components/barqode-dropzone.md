@@ -32,33 +32,17 @@ This component functions as a file input with the `capture` attribute set to `en
 	}
 </script>
 
-<div class="barqode" class:dragover>
+<div class:dragover style="width: 100%; aspect-ratio: 4/3">
 	<BarqodeDropzone {onDetect} {onDragover}>
-		<div class="instructions">
-			<p>Click to upload or drop an image here</p>
-		</div>
+		<p>Click to upload or drop an image here</p>
 	</BarqodeDropzone>
 </div>
 
 Last detected: {result}
 
 <style>
-	.barqode {
-		width: 100%;
-		aspect-ratio: 4 / 3;
-		border: 2px solid #2563eb;
-	}
-
 	.dragover {
 		border-color: white;
-	}
-
-	.instructions {
-		height: 100%;
-		width: 100%;
-		display: flex;
-		justify-content: center;
-		align-items: center;
 	}
 </style>
 ```
