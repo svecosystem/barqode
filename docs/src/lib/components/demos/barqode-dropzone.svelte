@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { BarqodeDropzone, type DetectedBarcode } from "barqode";
-	import { DemoContainer } from "@svecodocs/kit";
+	import { cn, DemoContainer } from "@svecodocs/kit";
 
 	let result = $state("");
 	let dragover = $state(false);
@@ -14,40 +14,23 @@
 	}
 </script>
 
-<DemoContainer>
-	<div class="title">Detecting QR-codes</div>
+<DemoContainer class="flex flex-col gap-5">
+	<div>Detecting QR-codes</div>
 
-	<div class:dragover style="width: 100%; aspect-ratio: 4/3; border: 2px solid #2563eb;">
+	<div
+		class={cn(
+			"border-foreground/15 aspect-[4/3] w-full rounded-lg border-[2px] border-dashed",
+			dragover && "border-brand"
+		)}
+	>
 		<BarqodeDropzone {onDetect} {onDragover}>
-			<div class="instructions">
+			<div class="flex h-full w-full items-center justify-center">
 				<p>Click to upload or drop an image here</p>
 			</div>
 		</BarqodeDropzone>
 	</div>
 
-	<div class="result">
+	<div>
 		Last detected: {result}
 	</div>
 </DemoContainer>
-
-<style>
-	.title {
-		margin-bottom: 1.25rem;
-	}
-
-	.dragover {
-		border-color: white;
-	}
-
-	.instructions {
-		height: 100%;
-		width: 100%;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-	}
-
-	.result {
-		margin-top: 1.25rem;
-	}
-</style>

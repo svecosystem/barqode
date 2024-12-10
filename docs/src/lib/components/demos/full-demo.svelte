@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { BarqodeStream, type BarcodeFormat, type DetectedBarcode } from "barqode";
-	import { DemoContainer } from "@svecodocs/kit";
+	import { DemoContainer, NativeSelect, Label, Checkbox } from "@svecodocs/kit";
 
 	let result = $state("");
 	let error = $state("");
@@ -36,7 +36,7 @@
 	});
 
 	// computed value for selected formats
-	let selectedBarcodeFormats: BarcodeFormat[] = $derived(
+	const selectedBarcodeFormats: BarcodeFormat[] = $derived(
 		Object.keys(barcodeFormats).filter(
 			// @ts-expect-error fix this later :)
 			(format: string) => barcodeFormats[format]
@@ -183,10 +183,10 @@
 	}
 </script>
 
-<DemoContainer>
-	<div class="flex flex-col gap-1">
-		<label for="camera-contraints">Camera constraints:</label>
-		<select
+<DemoContainer class="flex flex-col gap-6">
+	<div class="flex flex-col gap-2.5">
+		<Label for="camera-contraints">Camera constraints:</Label>
+		<NativeSelect
 			id="camera-contraints"
 			class="bg-accent rounded-sm"
 			bind:value={selectedConstraints}
@@ -196,40 +196,39 @@
 					{option.label}
 				</option>
 			{/each}
-		</select>
+		</NativeSelect>
 	</div>
 
-	<div class="mt-4 flex flex-col gap-1">
-		<label for="track-function">Track function:</label>
-		<select id="track-function" class="bg-accent rounded-sm" bind:value={trackFunctionSelected}>
+	<div class="flex flex-col gap-2.5">
+		<Label for="track-function">Track function:</Label>
+		<NativeSelect
+			id="track-function"
+			class="bg-accent rounded-sm"
+			bind:value={trackFunctionSelected}
+		>
 			{#each trackFunctionOptions as option}
 				<option value={option}>
 					{option.text}
 				</option>
 			{/each}
-		</select>
+		</NativeSelect>
 	</div>
 
-	<!-- svelte-ignore a11y_label_has_associated_control -->
-	<div class="mt-4 flex flex-col gap-1">
-		<label>Barcode formats:</label>
-		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+	<fieldset class="flex flex-col gap-1">
+		<legend class="mb-2.5 select-none">Barcode formats:</legend>
+		<div class="grid grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-3">
 			{#each Object.keys(barcodeFormats) as option}
 				{@const barcodeOption = option as BarcodeFormat}
-				<div class="flex gap-2">
-					<input
-						type="checkbox"
-						id={option}
-						bind:checked={barcodeFormats[barcodeOption]}
-					/>
-					<label for={option}>{option}</label>
+				<div class="flex items-center">
+					<Checkbox id={option} bind:checked={barcodeFormats[barcodeOption]} />
+					<Label for={option} class="pl-2">{option}</Label>
 				</div>
 			{/each}
 		</div>
-	</div>
+	</fieldset>
 
 	{#if error}
-		<div class="error">{error}</div>
+		<div class="text-destructive font-semibold">{error}</div>
 	{/if}
 
 	<div class="my-4" style="width: 100%; aspect-ratio: 4/3;">
@@ -247,10 +246,3 @@
 		Last detected: {result}
 	</div>
 </DemoContainer>
-
-<style>
-	.error {
-		font-weight: bold;
-		color: red;
-	}
-</style>
