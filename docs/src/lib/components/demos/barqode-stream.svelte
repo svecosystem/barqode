@@ -1,9 +1,10 @@
 <script lang="ts">
 	import { BarqodeStream, type DetectedBarcode } from "barqode";
 	import { DemoContainer } from "@svecodocs/kit";
+	import SpinnerBall from "phosphor-svelte/lib/SpinnerBall";
 
 	let loading = $state(true);
-	let result: string | null = $state(null);
+	let result = $state<string | null>(null);
 
 	function onCameraOn() {
 		loading = false;
@@ -33,38 +34,20 @@
 	}
 </script>
 
-<DemoContainer>
-	<div class="title">Detecting QR-codes</div>
+<DemoContainer class="flex flex-col gap-5">
+	<div>Detecting QR-codes</div>
 
-	<div style="width: 100%; aspect-ratio: 4/3;">
+	<div class="aspect-[4/3] w-full">
 		<BarqodeStream {onCameraOn} {onDetect} {track}>
 			{#if loading}
-				<div class="loading-indicator">Loading...</div>
+				<div class="flex h-full w-full items-center justify-center text-4xl font-semibold">
+					<SpinnerBall class="size-20 animate-spin " />
+				</div>
 			{/if}
 		</BarqodeStream>
 	</div>
 
-	<div class="result">
+	<div>
 		Last detected: {result}
 	</div>
 </DemoContainer>
-
-<style>
-	.title {
-		margin-bottom: 1.25rem;
-	}
-
-	.loading-indicator {
-		width: 100%;
-		height: 100%;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		font-weight: bold;
-		font-size: 2rem;
-	}
-
-	.result {
-		margin-top: 1.25rem;
-	}
-</style>
