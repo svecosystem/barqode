@@ -8,10 +8,10 @@
 		onDragover,
 		onError,
 		children,
+		inputRef = $bindable(null),
+		wrapperRef = $bindable(null),
 		...restProps
 	}: DropzoneProps = $props();
-
-	let input: HTMLInputElement = $state()!;
 
 	async function onDetectFile(promise: Promise<DetectedBarcode[]>) {
 		try {
@@ -76,7 +76,7 @@
 	}
 
 	function onClick() {
-		input.click();
+		inputRef?.click();
 	}
 </script>
 
@@ -91,6 +91,7 @@
 	ondragover={handleDragOver}
 	onclick={onClick}
 	onkeydown={onClick}
+	bind:this={wrapperRef}
 >
 	<input
 		class="hidden"
@@ -101,7 +102,7 @@
 		capture="environment"
 		multiple
 		{...restProps}
-		bind:this={input}
+		bind:this={inputRef}
 	/>
 
 	{@render children?.()}
