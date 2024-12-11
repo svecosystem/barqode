@@ -36,9 +36,24 @@ export type DropzoneProps = {
 	onError?: (error: Error) => void;
 
 	/**
-	 * Optional prop for content to be overlayed on top of the drop zone.
+	 * Optional prop for content to overlay on top of the drop zone.
 	 */
 	children?: Snippet;
+
+	/**
+	 * A reference to the underlying `input` element.
+	 *
+	 * @bindable
+	 *
+	 */
+	inputRef?: HTMLInputElement | null;
+
+	/**
+	 * A reference to the wrapping `div` element.
+	 *
+	 * @bindable
+	 */
+	wrapperRef?: HTMLElement | null;
 } & HTMLInputAttributes;
 
 export type StreamProps = {
@@ -119,7 +134,36 @@ export type StreamProps = {
 	onDetect?: (detectedCodes: DetectedBarcode[]) => void;
 
 	/**
-	 * Optional prop for content to be overlayed on top of the camera stream.
+	 * Optional prop for content to overlay on top of the camera stream.
 	 */
 	children?: Snippet;
+
+	/**
+	 * A reference to the underlying `video` element.
+	 *
+	 * @bindable
+	 *
+	 */
+	videoRef?: HTMLVideoElement | null;
+
+	/**
+	 * A reference to the wrapping `div` element.
+	 *
+	 * @bindable
+	 */
+	wrapperRef?: HTMLElement | null;
+
+	/**
+	 * A reference to the pause frame `canvas` element.
+	 *
+	 * @bindable
+	 */
+	pauseRef?: HTMLCanvasElement | null;
+
+	/**
+	 * A reference to the tracking frame `canvas` element.
+	 *
+	 * @bindable
+	 */
+	trackingRef?: HTMLCanvasElement | null;
 };

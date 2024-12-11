@@ -16,12 +16,13 @@
 		onCameraOff,
 		onDetect,
 		children,
+		videoRef = $bindable(null),
+		pauseRef = $bindable(null),
+		trackingRef = $bindable(null),
+		wrapperRef = $bindable(null),
 	}: StreamProps = $props();
 
 	// state
-	let video: HTMLVideoElement = $state()!;
-	let pauseFrame: HTMLCanvasElement = $state()!;
-	let trackingLayer: HTMLCanvasElement = $state()!;
 	let cameraActive = $state(false);
 	let isMounted = $state(false);
 
@@ -37,12 +38,13 @@
 		() => cameraSettings,
 		() => {
 			const settings = cameraSettings;
-			const ctx = pauseFrame.getContext("2d")!;
+
+			const ctx = pauseRef!.getContext("2d")!;
 
 			if (!settings.shouldStream) {
-				pauseFrame.width = video.videoWidth;
-				pauseFrame.height = video.videoHeight;
-				ctx.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
+				pauseRef!.width = videoRef!.videoWidth;
+				pauseRef!.height = videoRef!.videoHeight;
+				ctx.drawImage(videoRef!, 0, 0, videoRef!.videoWidth, videoRef!.videoHeight);
 
 				cameraController.stop();
 				cameraActive = false;
@@ -55,7 +57,7 @@
 
 			try {
 				cameraController
-					.start(video, settings)
+					.start(videoRef!, settings)
 					.then((capabilities) => {
 						if (isMounted) {
 							cameraActive = true;
@@ -88,12 +90,12 @@
 		() => shouldScan,
 		() => {
 			if (shouldScan) {
-				clearCanvas(pauseFrame);
-				clearCanvas(trackingLayer);
+				clearCanvas(pauseRef!);
+				clearCanvas(trackingRef!);
 
 				const scanInterval = track === undefined ? 500 : 40;
 
-				keepScanning(video, {
+				keepScanning(videoRef!, {
 					detectHandler: (detectedCodes: DetectedBarcode[]) => onDetect?.(detectedCodes),
 					formats: formats,
 					locateHandler: onLocate,
@@ -124,12 +126,12 @@
 	 */
 	function onLocate(detectedCodes: DetectedBarcode[]) {
 		if (detectedCodes.length === 0 || track === undefined) {
-			clearCanvas(trackingLayer);
+			clearCanvas(trackingRef!);
 		} else {
-			const displayWidth = video.offsetWidth;
-			const displayHeight = video.offsetHeight;
-			const resolutionWidth = video.videoWidth;
-			const resolutionHeight = video.videoHeight;
+			const displayWidth = videoRef!.offsetWidth;
+			const displayHeight = videoRef!.offsetHeight;
+			const resolutionWidth = videoRef!.videoWidth;
+			const resolutionHeight = videoRef!.videoHeight;
 
 			const largerRatio = Math.max(
 				displayWidth / resolutionWidth,
@@ -173,9 +175,9 @@
 				};
 			});
 
-			trackingLayer.width = video.offsetWidth;
-			trackingLayer.height = video.offsetHeight;
-			const ctx = trackingLayer.getContext("2d") as CanvasRenderingContext2D;
+			trackingRef!.width = videoRef!.offsetWidth;
+			trackingRef!.height = videoRef!.offsetHeight;
+			const ctx = trackingRef!.getContext("2d") as CanvasRenderingContext2D;
 			track?.(adjustedCodes, ctx);
 		}
 	}
@@ -189,19 +191,26 @@
 	});
 </script>
 
-<div class="wrapper">
-	<video bind:this={video} class="camera" class:hidden={!shouldScan} autoplay muted playsinline>
+<div class="wrapper" bind:this={wrapperRef}>
+	<video
+		bind:this={videoRef}
+		class="camera"
+		class:hidden={!shouldScan}
+		autoplay
+		muted
+		playsinline
+	>
 	</video>
 
 	<canvas
 		id="qrcode-stream-pause-frame"
-		bind:this={pauseFrame}
+		bind:this={pauseRef}
 		class="camera"
 		class:hidden={shouldScan}
 	>
 	</canvas>
 
-	<canvas id="qrcode-stream-tracking-layer" bind:this={trackingLayer} class="overlay"></canvas>
+	<canvas id="qrcode-stream-tracking-layer" bind:this={trackingRef} class="overlay"></canvas>
 
 	<div class="overlay">
 		{@render children?.()}
