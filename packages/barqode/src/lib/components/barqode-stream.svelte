@@ -19,6 +19,7 @@
 		videoRef = $bindable(null),
 		pauseRef = $bindable(null),
 		trackingRef = $bindable(null),
+		wrapperRef = $bindable(null),
 	}: StreamProps = $props();
 
 	// state
@@ -190,7 +191,7 @@
 	});
 </script>
 
-<div class="wrapper">
+<div class="wrapper" bind:this={wrapperRef}>
 	<video
 		bind:this={videoRef}
 		class="camera"
